@@ -389,6 +389,7 @@
 "Assets/Scripts/Respawn.cs"
 "Assets/Scripts/Rotate.cs"
 "Assets/Scripts/Weapon.cs"
+"Assets/Scripts/WeaponSwitch.cs"
 "Assets/Shared/Ramps/Runtime/RampAsset.cs"
 "Assets/Shared/Scripts/AdjustTimeScale.cs"
 "Assets/Shared/Scripts/ProximityActivate.cs"
