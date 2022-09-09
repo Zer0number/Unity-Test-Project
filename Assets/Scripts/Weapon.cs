@@ -25,7 +25,6 @@ public class Weapon : MonoBehaviour
 
     public Animator animator;
 
-    // Start is called before the first frame update
     void Start()
     {
         currentAmmo = magSize;
@@ -36,48 +35,61 @@ public class Weapon : MonoBehaviour
         shoot.Enable();
     }
 
-    // Update is called once per frame
     void Update()
     {
         isShooting = shoot.ReadValue<float>() == 1;
+        if((maxAmmo + currentAmmo) != 0 && !isReloading){
+            animator.SetBool("isShooting", isShooting);
+        }
 
         if(isShooting && Time.time >= nextTimeFire){
+            
             nextTimeFire = Time.time + 1f / fireRate;
-            if(maxAmmo != -magSize){
-                Fire();
-            }
-        } 
+            Fire();
+        }
+        if(currentAmmo == 0 && !isReloading){
+            StartCoroutine(Reload());
+        }
     }
     
     private void Fire()
     {
-        RaycastHit hit;
+        if((maxAmmo + currentAmmo) != 0 && !isReloading){
+            RaycastHit hit;
 
-        muzzleflash.Play();
-        if(currentAmmo != 1){
-            currentAmmo--;
-        }
-        else if(!isReloading){
-            Reload();
-        }
-
-        if(Physics.Raycast(FpsCam.position, FpsCam.forward, out hit, range)){
-            if(hit.rigidbody != null){
-                hit.rigidbody.AddForce(-hit.normal * force);
+            muzzleflash.Play();
+            if(currentAmmo != 0){
+                currentAmmo--;
             }
 
-            Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
-            GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
-            Destroy(impact, 10);
+            if(Physics.Raycast(FpsCam.position, FpsCam.forward, out hit, range)){
+                if(hit.rigidbody != null){
+                    hit.rigidbody.AddForce(-hit.normal * force);
+                }
 
+                Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
+                GameObject impact = Instantiate(impactEffect, hit.point, impactRotation);
+                Destroy(impact, 10);
+            }
         }
     }
 
-    private void Reload(){
+    IEnumerator Reload(){
         isReloading = true;
-        maxAmmo -= (magSize - currentAmmo) + 1;
-        if(maxAmmo != -magSize)
+
+        animator.SetBool("isShooting", false);
+        
+        yield return new WaitForSeconds(reloadTime);
+
+        maxAmmo = maxAmmo - (magSize - currentAmmo);
+        if((maxAmmo + currentAmmo) != 0){
             currentAmmo = magSize;
+        }
+        else{
+            currentAmmo = magSize;
+            maxAmmo = 0;
+        }
+
         isReloading = false;
     }
 }

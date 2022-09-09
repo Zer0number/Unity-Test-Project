@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
 
@@ -17,6 +19,8 @@ public class MainController : MonoBehaviour
 
     InputAction movement;
     InputAction jump;
+
+    public Animator animator;
 
     void Start()
     {
@@ -45,6 +49,8 @@ public class MainController : MonoBehaviour
         float z = Input.GetAxis("Vertical");
         //float x = joystick.Horizontal;
         //float z = joystick.Vertical;
+
+        animator.SetFloat("speed", Mathf.Abs(x) + Mathf.Abs(z));
 
         move = transform.right * x + transform.forward * z;
         controller.Move(move * speed * Time.deltaTime);
