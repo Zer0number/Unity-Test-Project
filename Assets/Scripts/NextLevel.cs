@@ -5,10 +5,11 @@ using UnityEngine.SceneManagement;
   
 public class NextLevel : MonoBehaviour
 {
+    public string NextLevelPath = "";
     // Start is called before the first frame update
     private void OnTriggerEnter(Collider other){
         if(other.tag == "MainPlayer"){
-            SceneManager.LoadScene("Levels/Level2");
+            SceneManager.LoadScene(NextLevelPath);
         }
     }
 }

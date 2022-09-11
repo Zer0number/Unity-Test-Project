@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Shootable
+  - MainPlayer
+  - Waypoint
+  - Waypoints
   layers:
   - Default
   - TransparentFX
